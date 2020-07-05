@@ -1,33 +1,28 @@
-// captura os logs da account default in profile e armazena no bucket
-data "aws_cloudtrail_service_account" "main" {}
+resource "aws_cloudtrail" "default" {
+  depends_on = ["aws_s3_bucket_policy.CloudTrailS3Bucket"]
+  count                         = var.enabled ? 1 : 0
+  name                          = var.name
+  enable_logging                = var.enable_logging
+  s3_bucket_name                = aws_s3_bucket.event.id
+  enable_log_file_validation    = var.enable_log_file_validation
+  is_multi_region_trail         = var.is_multi_region_trail
+  include_global_service_events = var.include_global_service_events
+  cloud_watch_logs_role_arn     = var.cloud_watch_logs_role_arn
+  is_organization_trail         = var.is_organization_trail
 
-resource "aws_s3_bucket" "event" {
-  bucket        = "tf-cloudtrail-logs-capture-bucket"
-  force_destroy = true
+  dynamic "event_selector" {
+    for_each = var.event_selector
+    content {
+      include_management_events = lookup(event_selector.value, "include_management_events", null)
+      read_write_type           = lookup(event_selector.value, "read_write_type", null)
 
-  policy = <<EOF
-{
-  "Version": "2008-10-17",
-  "Statement": [
-    {
-      "Sid": "Put bucket policy needed for trails",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "${data.aws_cloudtrail_service_account.main.arn}"
-      },
-      "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::tf-cloudtrail-logging-test-bucket/*"
-    },
-    {
-      "Sid": "Get bucket policy needed for trails",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "${data.aws_cloudtrail_service_account.main.arn}"
-      },
-      "Action": "s3:GetBucketAcl",
-      "Resource": "arn:aws:s3:::tf-cloudtrail-logging-test-bucket"
+      dynamic "data_resource" {
+        for_each = lookup(event_selector.value, "data_resource", [])
+        content {
+          type   = data_resource.value.type
+          values = data_resource.value.values
+        }
+      }
     }
-  ]
-}
-EOF
+  }
 }

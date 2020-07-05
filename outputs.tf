@@ -1,19 +1,14 @@
-output "bucket_domain_name" {
-  value       = aws_s3_bucket.event.bucket_domain_name
-  description = "FQDN"
+output "cloudtrail_id" {
+  value       = join("", aws_cloudtrail.default.*.id)
+  description = "The name of the trail"
 }
 
-output "bucket_id" {
-  value       = aws_s3_bucket.event.id
-  description = "Bucket ID"
+output "cloudtrail_home_region" {
+  value       = join("", aws_cloudtrail.default.*.home_region)
+  description = "The region in which the trail was created"
 }
 
-output "bucket_arn" {
-  value       = aws_s3_bucket.event.arn
-  description = "Bucket ARN"
-}
-
-output "prefix" {
-  value       = aws_s3_bucket.event.bucket_prefix
-  description = "Prefix"
+output "cloudtrail_arn" {
+  value       = join("", aws_cloudtrail.default.*.arn)
+  description = "The Amazon Resource Name of the trail"
 }
