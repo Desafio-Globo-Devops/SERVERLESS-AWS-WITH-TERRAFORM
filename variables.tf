@@ -58,11 +58,6 @@ variable "is_organization_trail" {
   default     = false
   description = "The trail is an AWS Organizations trail"
 }
-
-variable "env" {
-  default = "dev"
-}
-
 variable "dbname" {
   default = "Event_Capture"
 }

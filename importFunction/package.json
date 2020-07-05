@@ -12,5 +12,8 @@
   "dependencies": {
     "aws-sdk": "^2.563.0",
     "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "dynamodb-doc": "^1.0.0"
   }
 }

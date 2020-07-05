@@ -1,13 +1,23 @@
 'use strict'
 
 const AWS = require('aws-sdk')
-AWS.config.region = process.env.AWS_REGION 
-
+AWS.config.region = ( process.env.AWS_REGION || 'us-east-1' )
+const s3 = new AWS.S3()
 const docClient = new AWS.DynamoDB.DocumentClient()
 const uuidv4 = require('uuid/v4')
-const { getS3object, putS3object }  = require('./s3')
+const ddbTable = process.env.TABLE
 
-const ddbTable = process.env.DDBtable 
+function getS3object(params) {
+  return new Promise((resolve, reject) => {
+    s3.getObject(params, function(err, data) {
+      if (err) {
+        console.error('getS3object error: ', err, err.stack)
+        reject(err)
+      }
+      resolve (data)
+    })
+  })
+}
 
 exports.handler = async (event) => {
   const records = event.Records
@@ -28,7 +38,7 @@ exports.handler = async (event) => {
         // Upload JSON to DynamoDB
         const jsonData = JSON.parse(originalText.Body.toString('utf-8'))
         const ddbResult = await uploadJSONtoDynamoDB(jsonData)
-      
+
         console.log ('DDBresult: ', ddbResult)
       })
     )
@@ -55,20 +65,20 @@ const uploadJSONtoDynamoDB = async (data) => {
   await Promise.all(
     batches.map(async (item_data) => {
 
-      // Set up the params object for the DDB call
+
       const params = {
         RequestItems: {}
       }
       params.RequestItems[ddbTable] = []
-  
+
       item_data.forEach(item => {
         for (let key of Object.keys(item)) {
-          // An AttributeValue may not contain an empty string
-          if (item[key] === '') 
+
+          if (item[key] === '')
             delete item[key]
         }
 
-        // Build params
+
         params.RequestItems[ddbTable].push({
           PutRequest: {
             Item: {
@@ -79,7 +89,7 @@ const uploadJSONtoDynamoDB = async (data) => {
         })
       })
 
-      // Push to DynamoDB in batches
+
       try {
         batchCount++
         console.log('Trying batch: ', batchCount)

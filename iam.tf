@@ -15,28 +15,11 @@ resource "aws_iam_role" "dynamo" {
 }
 EOF
 }
-// anexando policy de role DYNAMO
-//resource "aws_iam_role_policy_attachment" "dynamo" {
-//  policy_arn = aws_iam_policy.dynamo.arn
-//  role = aws_iam_role.dynamo.name
-//}
-//// Policy
-//resource "aws_iam_policy" "dynamo" {
-//  policy = data.aws_iam_policy_document.dynamo.json
-//}
-////Descriçao da Policy DYNAMO
-//data "aws_iam_policy_document" "dynamo" {
-//  statement {
-//    sid = "AllowDynamoPermissions"
-//    effect = "Allow"
-//    resources = ["*"]
-//
-//    actions = ["dynamodb:*"]
-//  }
-//  statement {
-//    sid = "AllowInvokingLambdas"
-//    effect = "Allow"
-//    resources = ["arn:aws:lambda:*:*:function:*"]
-//    actions = ["lambda:InvokerFunction"]
-//  }
-//}
+
+resource "aws_lambda_permission" "allow_bucket" {
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.dynamo.arn
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.event.arn
+}
