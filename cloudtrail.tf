@@ -13,7 +13,7 @@ resource "aws_cloudtrail" "default" {
   dynamic "event_selector" {
     for_each = var.event_selector
     content {
-      include_management_events = lookup(event_selector.value, "include_management_events", null)
+      include_management_events = lookup(event_selector.value, null)
       read_write_type           = lookup(event_selector.value, "read_write_type", null)
 
       dynamic "data_resource" {

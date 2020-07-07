@@ -9,3 +9,4 @@ terraform-aws-cloudtrail.iml
 .build-harness
 build-harness
 /.terraform.tfstate.lock.info
+/importFunction/lambda_function.zip

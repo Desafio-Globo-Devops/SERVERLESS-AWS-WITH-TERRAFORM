@@ -1,6 +1,8 @@
 variable "region" {
-  type = string
-  default = "us-east-1"
+  description = "Region exemple: 'us-east-1'"
+}
+variable "account_id" {
+  description = "Insert a Aws account ID exemple:'511322979481'"
 }
 variable "name" {
   type        = string
@@ -71,5 +73,6 @@ variable "write_capacity" {
 }
 
 variable "bucket_name" {
-  default = "logs-capture-bucket-666"
+  description = "Give a nome for your bucket exemplo: 'terraform-test-bucket-cloudtrail-logs'"
+  default = "terraform-test-bucket-cloudtrail-logs"
 }

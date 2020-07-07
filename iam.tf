@@ -1,19 +1,5 @@
 resource "aws_iam_role" "dynamo" {
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
+  assume_role_policy = file("importFunction/lambda_iam.json")
 }
 
 resource "aws_lambda_permission" "allow_bucket" {
