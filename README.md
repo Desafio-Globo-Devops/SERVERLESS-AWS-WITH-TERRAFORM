@@ -1,4 +1,4 @@
-# Estrutura Serveless
+# Estrutura Serverless
 ## Requisitos para rodar a aplicação:
 
 - Estar com o AWS CLI instalado e configurado com a account fullacess desejada;
