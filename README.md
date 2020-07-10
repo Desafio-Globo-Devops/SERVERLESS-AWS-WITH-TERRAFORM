@@ -16,6 +16,6 @@ Existe um makefile no projeto para facilitar os comandos, então caso queira faz
 
  - Linguagem: **Python 3.7**
  - Infraestrutura: **Terraform 12**
- - Banco de dados: **DynamoDB
+ - Banco de dados: **DynamoDB**
 
 autor: **Daniel Nicácio**
