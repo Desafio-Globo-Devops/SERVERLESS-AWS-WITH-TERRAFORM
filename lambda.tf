@@ -1,4 +1,4 @@
-// gera um zip atraves do arquivo app.js DYNAMO
+// gera um zip atraves do arquivo lambda_function.py DYNAMO
 data "archive_file" "dynamo" {
   type = "zip"
   source_file = "${path.module}/importFunction/lambda_function.py"
